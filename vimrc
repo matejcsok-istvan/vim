@@ -54,7 +54,7 @@ let g:coc_global_extensions = [
 nnoremap gcc I// <ESC>j
 nnoremap goo I<ESC>xx <ESC>0xj
 
-let mapleader = "."
+let mapleader = ","
 
 colorscheme gruvbox
 set background=dark
@@ -218,3 +218,8 @@ map <C-p> :GFiles<cr>
 map <C-o> :Files<cr>
 
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+map <leader>l :Prettier<cr>
+
+"Fugitive
+map <leader>gs :Gstatus<cr>
+map <leader>gc :Gcommit<cr>

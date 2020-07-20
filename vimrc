@@ -20,6 +20,11 @@ set noswapfile
 set relativenumber
 set wildmenu
 set path+=**
+set diffopt+=vertical
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartcase
 
 call plug#begin('~/.vim/plugged')
 
@@ -215,7 +220,7 @@ map <leader>n :bn<cr>
 map <leader>b :bp<cr>
 
 map <C-p> :GFiles<cr>
-map <C-o> :Files<cr>
+"map <C-o> :Files<cr>
 
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 map <leader>l :Prettier<cr>

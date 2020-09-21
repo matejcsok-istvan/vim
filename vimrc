@@ -15,6 +15,7 @@ set nowrap
 set undodir=~/.vim/undodir
 set undofile
 set incsearch
+set hlsearch
 set rtp+=~/.fzf
 set noswapfile
 set relativenumber
@@ -25,6 +26,10 @@ set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
 set smartcase
+set signcolumn=auto
+set encoding=UTF-8
+set cursorline
+"set clipboard=unnamedplus               " Copy paste between vim and everything else"
 
 call plug#begin('~/.vim/plugged')
 
@@ -41,12 +46,26 @@ Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
 Plug 'lyuts/vim-rtags'
 Plug 'mbbill/undotree'
-Plug 'preservim/nerdtree'
 Plug 'ianks/vim-tsx'
 Plug 'leafgarland/typescript-vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
+Plug 'vim-python/python-syntax'
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'mhinz/vim-startify'
 
 call plug#end()
+
+" vim airline plugin
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme="luna"
+
+"python
+let g:python_highlight_all = 1
 
 let g:coc_global_extensions = [
 			\'coc-tsserver',
@@ -63,6 +82,7 @@ let mapleader = ","
 
 colorscheme gruvbox
 set background=dark
+let g:gruvbox_contrast_dark = "soft"
 set t_Co=256
 
 " TextEdit might fail if hidden is not set.
@@ -84,12 +104,12 @@ set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
+" if has("patch-8.1.1564")
   " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+  " set signcolumn=number
+" else
+  " set signcolumn=yes
+" endif
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -214,8 +234,6 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-map <C-n> :NERDTreeToggle<CR>
-
 map <leader>n :bn<cr>
 map <leader>b :bp<cr>
 
@@ -228,3 +246,76 @@ map <leader>l :Prettier<cr>
 "Fugitive
 map <leader>gs :Gstatus<cr>
 map <leader>gc :Gcommit<cr>
+
+map <leader>e bywi<<Esc>A></<Esc>pa><Esc>bba
+map <leader>E bywi<<Esc>A/>
+
+"Coc explorer
+" :CocInstall coc-explorer
+ nmap <space>e :CocCommand explorer<CR>
+ nmap <space>f :CocCommand explorer --preset floating<CR>
+ autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+ let g:coc_explorer_global_presets = {
+\   '.vim': {
+\     'root-uri': '~/.vim',
+\   
+\},
+\   'tab': {
+\     'position': 'tab',
+\     'quit-on-open': v:true,
+\   
+\},
+\   'floating': {
+\     'position': 'floating',
+\     'open-action-strategy': 'sourceWindow',
+\   
+\},
+\   'floatingTop': {
+\     'position': 'floating',
+\     'floating-position': 'center-top',
+\     'open-action-strategy': 'sourceWindow',
+\   
+\},
+\   'floatingLeftside': {
+\     'position': 'floating',
+\     'floating-position': 'left-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   
+\},
+\   'floatingRightside': {
+\     'position': 'floating',
+\     'floating-position': 'right-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   
+\},
+\   'simplify': {
+\     'file-child-template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
+\   
+\}
+\ 
+\}
+
+ let g:startify_lists = [
+           \ { 'type': 'files',     'header': ['   Files']             },
+           \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()]  },
+           \ { 'type': 'sessions',  'header': ['   Sessions']        },
+           \ { 'type': 'bookmarks', 'header': ['   Bookmarks']       },
+           \ 
+           \]
+
+" Use alt + hjkl to resize windows
+nnoremap <Bslash>j   :resize -2<CR>
+nnoremap <Bslash>k   :resize +2<CR>
+nnoremap <Bslash>h   :vertical resize -2<CR>
+nnoremap <Bslash>l   :vertical resize +2<CR>
+
+" Alternate way to save
+nnoremap <C-s> :wa<CR>
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
